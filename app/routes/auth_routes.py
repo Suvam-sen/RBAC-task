@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Response, status
+from fastapi import APIRouter, HTTPException, Depends, Response, status, Request
 from app.models.user_model import UserModel
 from app.schemas.user_schema import LoginSchema, RegisterSchema
 from app.database.db import get_db
@@ -69,8 +69,15 @@ async def login(user_data: LoginSchema, response: Response, db: AsyncIOMotorData
 
 
 @auth_router.get("/logout")
-async def logout(response: Response):
+async def logout(response: Response, request: Request):
+     # Check if the cookie exists
+    token = request.cookies.get("access_token")
     
+    if not token:
+        return JSONResponse(
+            content={"status": "error", "message": "User not logged in"},
+            status_code=401  # Unauthorized
+        )
     response.delete_cookie(
         key="access_token", 
         httponly=True, 

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.database.db import get_db
 from app.schemas.course_schema import CourseSchema
-from app.middleware.auth_middleware import admin_required
+from app.middleware.auth_middleware import admin_required, get_current_user
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -57,7 +57,7 @@ async def delete_course(course_id: str, db: AsyncIOMotorDatabase = Depends(get_d
         }
 
 
-@course_router.get("/")
+@course_router.get("/", dependencies= [Depends(get_current_user)])
 async def get_all_courses(db: AsyncIOMotorDatabase = Depends(get_db)):
     course_collection = db["courses"]  # accesing db dynamically
     
@@ -70,7 +70,7 @@ async def get_all_courses(db: AsyncIOMotorDatabase = Depends(get_db)):
     }
 
 
-@course_router.get("/{course_id}")
+@course_router.get("/{course_id}", dependencies= [Depends(get_current_user)])
 async def get_course(course_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     course_collection = db["courses"]  # accesing db dynamically
     course = await course_collection.find_one({"_id": ObjectId(course_id)}, {"_id": 0})
