@@ -5,6 +5,3 @@ class CourseSchema(BaseModel):
     description: str
     instructor: str
     price: float
-
-    # class Config:
-    #     orm_mode = True

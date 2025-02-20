@@ -2,15 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.auth_routes import auth_router
 from app.routes.course_routes import course_router
-# from app.utils.database import connect_db
-
 
 app = FastAPI()
-
-
-# @app.on_event("startup")
-# async def startup_db():
-#     await connect_db()
 
 
 origins = [

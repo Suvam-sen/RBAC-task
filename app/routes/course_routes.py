@@ -18,7 +18,7 @@ async def create_course(course: CourseSchema, db: AsyncIOMotorDatabase = Depends
 
     created_course = await course_collection.find_one(
         {"_id": result.inserted_id},
-        {"_id": 0}  # Exclude `_id`
+        {"_id": 0}  # Exclude _id
     )
     return {
         "status": "success",

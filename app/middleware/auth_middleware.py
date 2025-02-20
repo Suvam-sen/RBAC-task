@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Depends, Request, Response
+from fastapi import HTTPException, Depends, Request
 import jwt
 import os
 from dotenv import load_dotenv
@@ -22,6 +22,6 @@ async def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Invalid token")
     
 
-async def admin_required(request: Request, user = Depends(get_current_user)):
+async def admin_required( user = Depends(get_current_user)):
     if user["role"] != "Admin":
         raise HTTPException(status_code=403, detail="Admin access required")

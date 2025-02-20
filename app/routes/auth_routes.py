@@ -10,7 +10,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 auth_router = APIRouter()
 
 @auth_router.post("/register")
-async def register(user: RegisterSchema, db: AsyncIOMotorDatabase = Depends(get_db)):       #  Inject DB dynamically
+async def register(user: RegisterSchema, db: AsyncIOMotorDatabase = Depends(get_db)): #  Inject DB dynamically
 
     users_collection = db["users"]  #  Access users collection dynamically
 
@@ -28,7 +28,7 @@ async def register(user: RegisterSchema, db: AsyncIOMotorDatabase = Depends(get_
         password = hashed_password, 
         role = user.role or "User")
 
-    await users_collection.insert_one(user_data.model_dump())  # Store into DB
+    await users_collection.insert_one(user_data.model_dump())
     return {
         "status": "success",
         "message": "User registered successfully",
@@ -40,7 +40,7 @@ async def register(user: RegisterSchema, db: AsyncIOMotorDatabase = Depends(get_
 @auth_router.post("/login")
 async def login(user_data: LoginSchema, response: Response, db: AsyncIOMotorDatabase = Depends(get_db)):
 
-    users_collection = db["users"]  #  Access users collection dynamically
+    users_collection = db["users"]
 
     db_user = await users_collection.find_one({"email": user_data.email})
     if not db_user or not verify_password(user_data.password, db_user["password"]):

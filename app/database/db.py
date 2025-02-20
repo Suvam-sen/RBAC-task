@@ -18,7 +18,5 @@ except Exception as e:
     raise HTTPException(status_code=500, detail=str(e))
 
 
-
-# Dependency function for FastAPI
 async def get_db():
     return db
