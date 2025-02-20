@@ -1,6 +1,6 @@
 # Project Name
 
-Project Name is a Python-based application that uses FastAPI and MongoDB.
+Project Name is a Python-based RBAC application that uses FastAPI and MongoDB.
 
 ## Installation
 
