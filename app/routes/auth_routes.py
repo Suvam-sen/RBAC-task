@@ -35,8 +35,6 @@ async def register(user: RegisterSchema, db: AsyncIOMotorDatabase = Depends(get_
         "data": user_data.model_dump()
     }
 
-
-
 @auth_router.post("/login")
 async def login(user_data: LoginSchema, response: Response, db: AsyncIOMotorDatabase = Depends(get_db)):
 
@@ -54,6 +52,7 @@ async def login(user_data: LoginSchema, response: Response, db: AsyncIOMotorData
     response.set_cookie(
         key="access_token",
         value=token,
+        path="/",
         httponly=True,
         samesite="strict",
         secure=False,
@@ -67,27 +66,19 @@ async def login(user_data: LoginSchema, response: Response, db: AsyncIOMotorData
         "token": token,   # only for testing purposes
     }
 
-
 @auth_router.get("/logout")
 async def logout(response: Response, request: Request):
      # Check if the cookie exists
     token = request.cookies.get("access_token")
-    
     if not token:
-        return JSONResponse(
-            content={"status": "error", "message": "User not logged in"},
-            status_code=401  # Unauthorized
-        )
+        response.status_code = 401
+        return {"status": "error", "message": "User not logged in"}
+    
     response.delete_cookie(
-        key="access_token", 
+        key="access_token",
+        path="/", 
         httponly=True, 
-        samesite="strict", 
         secure=False
-        )
-    return JSONResponse(
-        content={
-            "status": "success", 
-            "message": "User logged out successfully"
-         },
-        status_code=status.HTTP_200_OK
     )
+    response.status_code = status.HTTP_200_OK
+    return {"status": "success", "message": "User logged out successfully"}
